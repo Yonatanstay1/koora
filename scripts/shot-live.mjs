@@ -22,11 +22,24 @@ async function findStay(page, villa, nights) {
   throw new Error("no free stretch");
 }
 
+async function must(page, locator, tag) {
+  try {
+    await locator.first().waitFor({ timeout: 15000 });
+  } catch (e) {
+    await page.screenshot({ path: `${OUT}/FAIL-${tag}.png`, fullPage: true });
+    console.log("FAIL", tag, page.url());
+    console.log("PANEL TEXT:", (await page.locator("#inquire").innerText().catch(() => "?")).replace(/\s+/g, " "));
+    throw e;
+  }
+}
+
 const browser = await chromium.launch();
 for (const [name, viewport] of [["desktop", { width: 1440, height: 1000 }], ["mobile", { width: 390, height: 844 }]]) {
   const page = await browser.newPage({ viewport });
   const errors = [];
   page.on("pageerror", (e) => errors.push(e.message));
+  page.on("console", (m) => m.type() === "error" && console.log("console:", m.text()));
+  page.on("requestfailed", (r) => console.log("request failed:", r.url()));
 
   // 1. Calendar, nothing chosen
   await page.goto(`${BASE}/villas/casa-ficus`, { waitUntil: "networkidle" });
@@ -38,7 +51,7 @@ for (const [name, viewport] of [["desktop", { width: 1440, height: 1000 }], ["mo
   // 2. Free dates -> live price + Book now
   const [a, d] = await findStay(page, "casa-ficus", 4);
   await page.goto(`${BASE}/villas/casa-ficus?arrive=${a}&depart=${d}&guests=2`, { waitUntil: "networkidle" });
-  await page.getByText("Book now").waitFor();
+  await must(page, page.getByText("Book now"), name + "-2");
   await page.locator("#inquire").scrollIntoViewIfNeeded();
   await page.locator("#inquire").screenshot({ path: `${OUT}/${name}-2-price-book.png` });
   const href = await page.getByText("Book now").getAttribute("href");
@@ -51,13 +64,13 @@ for (const [name, viewport] of [["desktop", { width: 1440, height: 1000 }], ["mo
     if (av.free.length < 3) b = [iso(o), iso(o + 3)];
   }
   await page.goto(`${BASE}/villas/casa-ficus?arrive=${b[0]}&depart=${b[1]}&guests=2`, { waitUntil: "networkidle" });
-  await page.getByText("already booked").waitFor();
+  await must(page, page.getByText("already booked"), name + "-3");
   await page.locator("#inquire").screenshot({ path: `${OUT}/${name}-3-booked.png` });
 
   // 4. Combination villa -> price, "Request this stay"
   const [ca, cd] = await findStay(page, "casa-la-onda-ultra-suite", 3);
   await page.goto(`${BASE}/villas/casa-la-onda-ultra-suite?arrive=${ca}&depart=${cd}&guests=4`, { waitUntil: "networkidle" });
-  await page.getByText("Request this stay").waitFor();
+  await must(page, page.getByText("Request this stay"), name + "-4");
   await page.locator("#inquire").screenshot({ path: `${OUT}/${name}-4-combo.png` });
 
   // 5. Unlinked villa keeps the old inquiry flow

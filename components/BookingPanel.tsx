@@ -90,7 +90,7 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
               setError(err);
               if (err) e.preventDefault();
             }}
-            action="/contact"
+            action={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/contact/`}
             method="get"
           >
             <input type="hidden" name="villa" value={villa.slug} />
