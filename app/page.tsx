@@ -16,9 +16,9 @@ import {
 import { VILLAS } from "@/data/villas";
 export default function HomePage() {
   const featured = [
-    "casa-loma",
-    "casa-la-nina",
-    "casa-la-onda-ultra-suite",
+    "pacific-surfshack",
+    "casa-ficus",
+    "santa-teresa-tree-house-1",
   ].map((slug) => VILLAS.find((v) => v.slug === slug)!);
   return (
     <>

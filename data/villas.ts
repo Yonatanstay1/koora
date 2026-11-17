@@ -25,7 +25,35 @@ export interface Villa {
   longitude: number;
 }
 
-export const VILLAS: Villa[] = [
+const ALL_VILLAS: Villa[] = [
+  {
+    slug: "pacific-surfshack",
+    name: "Pacific SurfShack",
+    city: "santa-teresa",
+    cityLabel: "Santa Teresa",
+    address: "Santa Teresa, Puntarenas, Costa Rica",
+    tagline: "Ocean views · Private pool · Groups",
+    description:
+      "Pacific SurfShack is a private villa in the jungle hills above Costa Rica’s Pacific coast, with ocean views from the deck and its own pool. It is 8 minutes by car or ATV from the centre of Santa Teresa, its beachfront bars and restaurants, so you can surf, ride or eat out by day and come back to a quiet retreat at night.",
+    beds: 3,
+    baths: 4,
+    sleeps: 5,
+    pricePerNight: 287,
+    amenities: ["Swimming Pool", "Air Conditioning", "Wi-Fi", "Laundry", "Free Parking"],
+    highlights: ["Ocean views", "Private pool", "Air conditioning", "Free parking"],
+    bestFor: ["Families", "Small groups", "Surf trips"],
+    images: [
+      "/images/stays/pacific-surfshack-1.webp",
+      "/images/stays/pacific-surfshack-2.webp",
+      "/images/stays/pacific-surfshack-3.webp",
+      "/images/stays/pacific-surfshack-4.webp",
+      "/images/stays/pacific-surfshack-5.webp",
+      "/images/stays/pacific-surfshack-6.webp",
+    ],
+    featured: true,
+    latitude: 9.6148,
+    longitude: -85.1332,
+  },
   {
     slug: "casa-ficus",
     name: "Casa Ficus",
@@ -261,7 +289,7 @@ export const VILLAS: Villa[] = [
   },
   {
     slug: "santa-teresa-tree-house-1",
-    name: "Santa Teresa Tree House #1",
+    name: "Jungle Treehouse 1",
     city: "santa-teresa",
     cityLabel: "Santa Teresa",
     address: "C. La Cala",
@@ -327,7 +355,7 @@ export const VILLAS: Villa[] = [
   },
   {
     slug: "santa-teresa-tree-houses-2",
-    name: "Santa Teresa Tree Houses #2",
+    name: "Jungle Treehouse 2",
     city: "santa-teresa",
     cityLabel: "Santa Teresa",
     address: "C. La Cala",
@@ -377,6 +405,18 @@ export const CITIES = [
     image: "https://koorarentals.com/wp-content/uploads/2025/08/DSC09432.jpg",
   },
 ];
+
+// The website shows exactly the houses that are in Koora's Beds24 account.
+// Houses not in Beds24 are hidden (not deleted) so they can come back later.
+const HIDDEN = new Set([
+  "casa-la-nina",
+  "casa-la-onda-ultra-suite",
+  "casa-la-onda-ultra-suite-casita-la-onda",
+  "casa-loma",
+  "la-kasbah-guest-house",
+  "santa-teresa-tree-house-4",
+]);
+export const VILLAS: Villa[] = ALL_VILLAS.filter((v) => !HIDDEN.has(v.slug));
 
 export const CONTACT = {
   phone1: "+506 8512 5020",

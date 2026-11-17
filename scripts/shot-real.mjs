@@ -21,4 +21,17 @@ if (href) {
   await p.screenshot({ path: "shots/real-2-beds24.png", fullPage: true });
   console.log("BEDS24 TEXT:", (await p.locator("body").innerText()).replace(/\s+/g, " ").slice(0, 900));
 }
+const w = await b.newPage({ viewport: { width: 1440, height: 900 } });
+await w.goto(`${SITE}/villas/`, { waitUntil: "load" });
+await w.waitForTimeout(2500);
+await w.screenshot({ path: "shots/real-3-collection.png", fullPage: true });
+console.log("COLLECTION:", (await w.locator("main").innerText()).replace(/\s+/g, " ").slice(0, 700));
+await p.goto(`${SITE}/villas/pacific-surfshack/?arrive=${A}&depart=${D}&guests=2`, { waitUntil: "load" });
+await p.waitForTimeout(3000);
+await p.screenshot({ path: "shots/real-4-surfshack-top.png" });
+await p.locator("#inquire").scrollIntoViewIfNeeded();
+await p.locator("#inquire").screenshot({ path: "shots/real-5-surfshack-panel.png" });
+await w.goto(`${SITE}/`, { waitUntil: "load" });
+await w.waitForTimeout(2500);
+await w.locator("#collection").screenshot({ path: "shots/real-6-home-stays.png" });
 await b.close();

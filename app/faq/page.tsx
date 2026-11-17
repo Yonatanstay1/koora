@@ -32,7 +32,7 @@ const faqs = [
   ],
   [
     "Will I need a car?",
-    "Transport needs vary by location. Some hillside homes require a 4×4, including Casa La Niña. Ask us about road access, transfers and getting around before making arrangements.",
+    "Transport needs vary by location. Some hillside homes are easier to reach with a 4×4. Ask us about road access, transfers and getting around before making arrangements.",
   ],
   [
     "Can you help me choose a home?",
