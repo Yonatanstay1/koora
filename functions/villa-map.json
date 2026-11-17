@@ -1,0 +1,12 @@
+{
+  "_note": "Website villa slug -> Beds24 propertyId + roomIds. Fill with: node scripts/beds24-connect.mjs rooms. A villa left empty keeps the WhatsApp inquiry flow.",
+  "casa-ficus": { "propertyId": null, "roomIds": [] },
+  "casa-la-nina": { "propertyId": null, "roomIds": [] },
+  "casa-la-onda-ultra-suite-casita-la-onda": { "propertyId": null, "roomIds": [] },
+  "casa-la-onda-ultra-suite": { "propertyId": null, "roomIds": [] },
+  "casa-loma": { "propertyId": null, "roomIds": [] },
+  "la-kasbah-guest-house": { "propertyId": null, "roomIds": [] },
+  "santa-teresa-tree-house-1": { "propertyId": null, "roomIds": [] },
+  "santa-teresa-tree-house-4": { "propertyId": null, "roomIds": [] },
+  "santa-teresa-tree-houses-2": { "propertyId": null, "roomIds": [] }
+}

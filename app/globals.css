@@ -1,0 +1,90 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 100px;
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-paper text-ink antialiased;
+  }
+  h1,
+  h2,
+  h3 {
+    text-wrap: balance;
+  }
+  ::selection {
+    @apply bg-ink text-paper;
+  }
+  :focus-visible {
+    outline: 2px solid #808080;
+    outline-offset: 5px;
+  }
+  input,
+  select,
+  textarea {
+    min-width: 0;
+  }
+  input[type="date"] {
+    min-height: 24px;
+  }
+  summary {
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+}
+@layer components {
+  .container-koora {
+    @apply mx-auto w-full max-w-site px-6 sm:px-10 lg:px-16;
+  }
+  .btn-primary {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-none bg-ink px-7 py-3.5 text-sm font-medium text-white transition-colors hover:bg-[#333333];
+  }
+  .btn-ghost {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-none border border-ink/30 px-7 py-3.5 text-sm font-medium text-ink transition-colors hover:bg-ink hover:text-white;
+  }
+  .btn-light {
+    @apply inline-flex min-h-12 items-center justify-center gap-3 rounded-none bg-paper px-7 py-3.5 text-sm font-medium text-ink transition-colors hover:bg-white;
+  }
+  .eyebrow {
+    @apply text-[10px] font-semibold uppercase tracking-[0.22em] text-muted;
+  }
+  .display {
+    @apply font-display text-display;
+  }
+  .section-title {
+    @apply font-display text-display-sm;
+  }
+  .field {
+    @apply mt-2 block min-h-12 w-full rounded-lg border border-line bg-white px-3 py-3 text-base text-ink focus:border-ink;
+  }
+  .text-link {
+    @apply inline-flex min-h-11 items-center gap-3 border-b border-ink/40 pb-1 text-sm font-medium;
+  }
+}
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    scrollbar-width: none;
+  }
+  .safe-bottom {
+    padding-bottom: max(16px, env(safe-area-inset-bottom));
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

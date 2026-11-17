@@ -1,0 +1,17 @@
+{
+  "hosting": {
+    "site": "koora-demo",
+    "public": "out",
+    "ignore": ["firebase.json", "**/.*", "**/node_modules/**"],
+    "cleanUrls": true,
+    "trailingSlash": false,
+    "rewrites": [
+      { "source": "/api/beds24/**", "function": { "functionId": "beds24", "region": "us-central1" } }
+    ]
+  },
+  "functions": {
+    "source": "functions",
+    "runtime": "nodejs22",
+    "ignore": ["node_modules", ".git", "*.log"]
+  }
+}

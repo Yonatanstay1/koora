@@ -1,0 +1,14 @@
+node_modules
+.next
+out
+.env.local
+.firebase
+.netlify
+.vercel
+tsconfig.tsbuildinfo
+
+.koora-data/
+firebase-debug.log
+
+public/live/
+shots/
