@@ -54,7 +54,8 @@ for (const [slug, v] of Object.entries(map)) {
       updated: new Date().toISOString(),
       currency: v.currency || "USD",
       free, price, minStay,
-      book: single ? { base: v.bookingBase || "https://beds24.com/booking2.php", propertyId: v.propertyId, roomId: v.roomIds[0] } : null,
+      // bookOnline: true only once the Beds24 booking page is switched on for this property.
+      book: single && v.bookOnline ? { base: v.bookingBase || "https://beds24.com/booking2.php", propertyId: v.propertyId, roomId: v.roomIds[0] } : null,
     };
     writeFileSync(new URL(slug + ".json", OUT), JSON.stringify(file));
     written++;
