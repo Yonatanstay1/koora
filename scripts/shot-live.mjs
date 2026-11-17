@@ -17,7 +17,8 @@ async function findStay(page, villa, nights) {
     const r = await page.request.get(`${BASE}/api/beds24/quote?villa=${villa}&arrive=${iso(o)}&depart=${iso(o + nights)}&guests=2`);
     const q = await r.json();
     const a = await (await page.request.get(`${BASE}/api/beds24/availability?villa=${villa}&from=${iso(o)}&to=${iso(o + nights)}`)).json();
-    if (q.bookable && a.free.length >= nights) return [iso(o), iso(o + nights)];
+    const allFree = Array.from({ length: nights }, (_, i) => iso(o + i)).every((d) => a.free.includes(d));
+    if (q.bookable && allFree) return [iso(o), iso(o + nights)];
   }
   throw new Error("no free stretch");
 }
