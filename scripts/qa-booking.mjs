@@ -2,7 +2,7 @@
 // The email send is intercepted: the office inbox gets NOTHING from this test.
 import { chromium } from "playwright";
 import { mkdirSync, writeFileSync } from "node:fs";
-const SITE = process.env.SITE || "https://yonatanstay1.github.io/koora";
+const SITE = process.env.SITE || "https://koorarentals.com";
 const OUT = "shots/booking";
 mkdirSync(OUT, { recursive: true });
 const add = (iso, n) => { const d = new Date(iso + "T00:00:00Z"); d.setUTCDate(d.getUTCDate() + n); return d.toISOString().slice(0, 10); };

@@ -4,7 +4,7 @@
 import { chromium } from "playwright";
 import { mkdirSync, writeFileSync } from "node:fs";
 
-const SITE = process.env.SITE || "https://yonatanstay1.github.io/koora";
+const SITE = process.env.SITE || "https://koorarentals.com";
 const OUT = "shots/qa";
 mkdirSync(OUT, { recursive: true });
 
