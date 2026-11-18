@@ -35,10 +35,10 @@ export default function WhatsAppButton() {
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Chat with Koora on WhatsApp"
-      className={`fixed right-4 z-30 flex h-12 items-center gap-2 rounded-full border border-white/30 bg-black px-4 text-xs text-white shadow-lg transition-opacity duration-200 ${pathname.startsWith("/villas/") ? "bottom-28 lg:bottom-6" : "bottom-6"} ${hidePhone ? "pointer-events-none opacity-0 lg:pointer-events-auto lg:opacity-100" : ""}`}
+      className={`fixed right-4 z-30 flex h-12 w-12 items-center justify-center gap-2 rounded-full border border-white/30 bg-black text-xs lg:w-auto lg:px-4 text-white shadow-lg transition-opacity duration-200 ${pathname.startsWith("/villas/") ? "bottom-28 lg:bottom-6" : "bottom-6"} ${hidePhone ? "pointer-events-none opacity-0 lg:pointer-events-auto lg:opacity-100" : ""}`}
     >
-      <Icon name="chat" className="h-4 w-4" />
-      WhatsApp
+      <Icon name="chat" className="h-5 w-5 lg:h-4 lg:w-4" />
+      <span className="hidden lg:inline">WhatsApp</span>
     </a>
   );
 }
