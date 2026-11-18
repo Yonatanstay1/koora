@@ -1,11 +1,14 @@
 "use client";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
-import { Suspense } from "react";
+import { Suspense, useEffect, useState } from "react";
 import SearchBar from "@/components/SearchBar";
 import VillaCard from "@/components/VillaCard";
 import { VILLAS } from "@/data/villas";
-import { stayQuery } from "@/lib/stay";
+import { nightsBetween, stayError, stayQuery } from "@/lib/stay";
+import { fetchFreeNights, fetchQuote, money, niceDate, rangeIsFree } from "@/lib/live";
+
+type Status = { state: "free" | "booked" | "minstay" | "unknown"; total?: string; minNights?: number };
 function Collection() {
   const params = useSearchParams();
   const guests = Number(params.get("guests")) || 0;
@@ -26,6 +29,35 @@ function Collection() {
               : true)),
   );
   const query = stayQuery(new URLSearchParams(params.toString()));
+  // With dates chosen: check every home against the live Beds24 calendar.
+  const arrive = params.get("arrive") || "";
+  const depart = params.get("depart") || "";
+  const withDates = !!arrive && !!depart && !stayError(arrive, depart);
+  const nights = nightsBetween(arrive, depart);
+  const [status, setStatus] = useState<Record<string, Status> | null>(null);
+  useEffect(() => {
+    setStatus(null);
+    if (!withDates) return;
+    let alive = true;
+    Promise.all(
+      VILLAS.map(async (v): Promise<[string, Status]> => {
+        const free = await fetchFreeNights(v.slug, arrive, depart);
+        if (!free) return [v.slug, { state: "unknown" }];
+        if (!rangeIsFree(free, arrive, depart)) return [v.slug, { state: "booked" }];
+        const q = await fetchQuote(v.slug, arrive, depart, params.get("guests") || "2");
+        if (q?.reason === "booked") return [v.slug, { state: "booked" }];
+        if (q?.reason === "minstay") return [v.slug, { state: "minstay", minNights: q.minNights }];
+        return [v.slug, { state: "free", total: q?.bookable && q.total ? money(q.total, q.currency) : undefined }];
+      }),
+    ).then((rows) => alive && setStatus(Object.fromEntries(rows)));
+    return () => {
+      alive = false;
+    };
+  }, [withDates, arrive, depart, params]);
+  const checking = withDates && !status;
+  const shown = withDates && status ? results.filter((v) => ["free", "unknown"].includes(status[v.slug]?.state)) : results;
+  const booked = withDates && status ? results.filter((v) => status[v.slug]?.state === "booked") : [];
+  const longer = withDates && status ? results.filter((v) => status[v.slug]?.state === "minstay") : [];
   return (
     <div className="container-koora pb-20 pt-32 lg:pt-44">
       <div className="max-w-2xl">
@@ -63,7 +95,9 @@ function Collection() {
           );
         })}
         <span className="ml-auto text-xs text-muted">
-          {results.length} {results.length === 1 ? "stay" : "stays"}
+          {checking
+            ? "Checking availability…"
+            : `${shown.length} ${shown.length === 1 ? "stay" : "stays"}${withDates ? " free" : ""}`}
         </span>
       </div>
       {pets && (
@@ -72,17 +106,54 @@ function Collection() {
           confirm each home’s policy.
         </p>
       )}
-      {results.length ? (
-        <div className="mt-10 grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
-          {results.map((v) => (
-            <VillaCard key={v.slug} villa={v} query={query} />
-          ))}
-        </div>
+      {withDates && (
+        <p className="mt-6 text-sm text-muted" aria-live="polite">
+          {checking
+            ? "Checking which homes are free…"
+            : `Free from ${niceDate(arrive)} to ${niceDate(depart)}, ${nights} ${nights === 1 ? "night" : "nights"}. Pick a home to send a booking request.`}
+        </p>
+      )}
+      {checking ? (
+        <div className="py-20 text-center text-sm text-muted">Checking availability…</div>
+      ) : shown.length ? (
+        <>
+          <div className="mt-10 grid gap-x-7 gap-y-12 sm:grid-cols-2 lg:grid-cols-3">
+            {shown.map((v) => (
+              <VillaCard
+                key={v.slug}
+                villa={v}
+                query={query}
+                stay={withDates && status?.[v.slug]?.state === "free" ? { total: status[v.slug].total, nights } : undefined}
+              />
+            ))}
+          </div>
+          {(booked.length > 0 || longer.length > 0) && (
+            <div className="mt-14 border-t border-line pt-6 text-sm leading-7 text-muted">
+              {booked.length > 0 && (
+                <p>
+                  Booked on these dates: {booked.map((v) => v.name).join(", ")}.
+                </p>
+              )}
+              {longer.map((v) => (
+                <p key={v.slug}>
+                  <Link href={`/villas/${v.slug}?${query}`} className="underline underline-offset-2">
+                    {v.name}
+                  </Link>{" "}
+                  is free but needs at least {status?.[v.slug]?.minNights} nights from this date.
+                </p>
+              ))}
+            </div>
+          )}
+        </>
       ) : (
         <div className="py-20 text-center">
-          <h2 className="font-display text-4xl">Let’s find another fit.</h2>
+          <h2 className="font-display text-4xl">
+            {withDates ? "Nothing free on those dates." : "Let’s find another fit."}
+          </h2>
           <p className="my-4 text-sm text-muted">
-            Try a different group size, or ask us to help plan your stay.
+            {withDates
+              ? "Try moving your dates a little, or ask us and we’ll help you find a stay."
+              : "Try a different group size, or ask us to help plan your stay."}
           </p>
           <Link href="/villas" className="btn-ghost">
             Clear filters

@@ -12,12 +12,14 @@ import {
   type Quote,
 } from "@/lib/live";
 import AvailabilityCalendar from "./AvailabilityCalendar";
+import RequestForm from "./RequestForm";
 import Icon from "./Icon";
 export default function BookingPanel({ villa }: { villa: Villa }) {
   const [arrive, setArrive] = useState("");
   const [depart, setDepart] = useState("");
   const [guests, setGuests] = useState("2");
   const [error, setError] = useState("");
+  const [step, setStep] = useState<"dates" | "details">("dates");
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
     setArrive(p.get("arrive") || "");
@@ -58,6 +60,11 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
   }, [datesFree, arrive, depart, guests, villa.slug, villa.sleeps]);
   const nights = nightsBetween(arrive, depart);
   const overCapacity = Number(guests) > villa.sleeps;
+  const minStay = live && quote && quote.reason === "minstay" ? quote.minNights || 2 : 0;
+  const blocked = live && datesOk && (!datesFree || quote?.reason === "booked" || minStay > 0);
+  const canRequest = datesOk && !overCapacity && !blocked && !quoting;
+  const estimate = quote?.bookable && quote.total ? money(quote.total, quote.currency) : "";
+  const freeElsewhere = "/villas?" + new URLSearchParams({ arrive, depart, guests }).toString();
   const query = new URLSearchParams({
     villa: villa.slug,
     arrive,
@@ -82,19 +89,32 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
           <p className="mt-3 text-xs font-medium text-ink">
             Book direct with Koora: no booking-platform fees.
           </p>
+          {step === "details" ? (
+            <RequestForm
+              villa={villa}
+              arrive={arrive}
+              depart={depart}
+              nights={nights}
+              guests={guests}
+              estimate={estimate}
+              live={live}
+              onBack={() => setStep("dates")}
+            />
+          ) : (
           <form
             className="mt-6"
             onSubmit={(e) => {
+              e.preventDefault();
               const err =
                 stayError(arrive, depart, true) ||
                 (overCapacity
                   ? `This home accommodates up to ${villa.sleeps} guests.`
                   : "");
               setError(err);
-              if (err) e.preventDefault();
+              if (err || !canRequest) return;
+              setStep("details");
+              document.getElementById("inquire")?.scrollIntoView({ block: "start" });
             }}
-            action={`${process.env.NEXT_PUBLIC_BASE_PATH || ""}/contact/`}
-            method="get"
           >
             <input type="hidden" name="villa" value={villa.slug} />
             {live && (
@@ -161,7 +181,17 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
             {live && datesOk && !datesFree && (
               <p role="alert" className="mt-4 text-sm text-red-800">
                 Some of these nights are already booked. Pick other dates in the
-                calendar, or ask us for something similar.
+                calendar, or{" "}
+                <Link href={freeElsewhere} className="underline underline-offset-2">
+                  see the homes free on these dates
+                </Link>
+                .
+              </p>
+            )}
+            {minStay > 0 && (
+              <p role="alert" className="mt-4 text-sm text-red-800">
+                From this arrival date the home needs a stay of at least {minStay} nights. Add nights or
+                choose another arrival date.
               </p>
             )}
             {nights > 0 && !stayError(arrive, depart) && (!live || datesFree) && (
@@ -182,14 +212,15 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
                 ) : null}
                 {live && !quoting && quote?.bookable && quote.total && quote.estimate ? (
                   <p className="mt-1 text-[11px] text-muted">
-                    Estimated total. The exact price and taxes are shown before you pay.
+                    Estimated total. Our team confirms the final price with you.
                   </p>
                 ) : null}
                 {live && !quoting && quote?.bookable && quote.total ? null : live && !quoting && quote && !quote.bookable ? (
-                  <p className="text-sm text-muted">
-                    These dates can’t be booked online (the home may need a
-                    longer stay). Ask us and we’ll find a way.
-                  </p>
+                  quote.reason === "noprice" ? (
+                    <p className="text-sm text-muted">
+                      {nights} {nights === 1 ? "night" : "nights"} · Our team will send you the price
+                    </p>
+                  ) : null
                 ) : (
                   !live || (!quoting && !quote) ? (
                     <p className="text-sm text-muted">
@@ -215,20 +246,25 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
                   Secure payment on our booking page. You can review everything
                   before you pay.
                 </p>
-                <button className="btn-ghost mt-3 w-full">Ask a question first</button>
               </>
             ) : (
               <>
-                <button className="btn-primary mt-6 w-full">
-                  {live && quote?.bookable ? "Request this stay" : "Ask about this stay"}{" "}
+                <button
+                  disabled={datesOk && !canRequest}
+                  className="btn-primary mt-6 w-full disabled:opacity-50"
+                >
+                  {quoting ? "Checking…" : "Request to book"}{" "}
                   <Icon name="arrow" className="h-4 w-4" />
                 </button>
                 <p className="mt-3 text-center text-[11px] leading-5 text-muted">
-                  Send an inquiry. No payment or reservation yet.
+                  {datesOk
+                    ? "No payment now. Next: your name and contact details."
+                    : "Choose your dates in the calendar to start."}
                 </p>
               </>
             )}
           </form>
+          )}
           <div className="mt-6 border-t border-line pt-5">
             <Link
               href={"/contact?" + query}

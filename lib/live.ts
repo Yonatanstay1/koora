@@ -48,6 +48,14 @@ export interface Quote {
   currency?: string;
   bookUrl?: string | null;
   estimate?: boolean;
+  // Why the dates can't be quoted: booked nights, a minimum stay, or no price on file.
+  reason?: "booked" | "minstay" | "noprice";
+  minNights?: number;
+}
+
+// Forget the cached file so the next call reads the latest copy (used right before a request is sent).
+export function refreshLive(villa: string) {
+  files.delete(villa);
 }
 
 async function getJson<T>(path: string): Promise<T | null> {
@@ -82,12 +90,13 @@ export async function fetchQuote(villa: string, arrive: string, depart: string, 
     let total = 0;
     let nights = 0;
     for (let d = arrive; d < depart; d = addDaysISO(d, 1)) {
-      if (!free.has(d) || !(f.price[d] > 0)) return { bookable: false } as Quote;
+      if (!free.has(d)) return { bookable: false, reason: "booked" } as Quote;
+      if (!(f.price[d] > 0)) return { bookable: false, reason: "noprice" } as Quote;
       total += f.price[d];
       nights++;
     }
     const min = f.minStay?.[arrive] || 1;
-    if (nights < min) return { bookable: false } as Quote;
+    if (nights < min) return { bookable: false, reason: "minstay", minNights: min } as Quote;
     let bookUrl: string | null = null;
     if (f.book) {
       const u = new URL(f.book.base);
@@ -115,6 +124,13 @@ export function addDaysISO(iso: string, n: number) {
 export function rangeIsFree(free: Set<string>, arrive: string, depart: string) {
   for (let d = arrive; d < depart; d = addDaysISO(d, 1)) if (!free.has(d)) return false;
   return true;
+}
+
+// "Tue 12 Jan 2027"
+export function niceDate(iso: string) {
+  const d = new Date(iso + "T00:00:00Z");
+  if (Number.isNaN(d.getTime())) return iso;
+  return d.toLocaleDateString("en-GB", { weekday: "short", day: "numeric", month: "short", year: "numeric", timeZone: "UTC" });
 }
 
 export function money(amount: number, currency = "USD") {

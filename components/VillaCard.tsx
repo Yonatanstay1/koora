@@ -6,10 +6,13 @@ export default function VillaCard({
   villa,
   query = "",
   index,
+  stay,
 }: {
   villa: Villa;
   query?: string;
   index?: number;
+  // Set when the guest searched dates: the home is free, with the estimated total if known.
+  stay?: { total?: string; nights: number };
 }) {
   const href = `/villas/${villa.slug}${query ? "?" + query : ""}`;
   return (
@@ -55,6 +58,23 @@ export default function VillaCard({
           View property ↗
         </Link>
         <div className="mt-4 flex items-center justify-between border-t border-line pt-3">
+          {stay ? (
+            <>
+              <p className="text-xs text-muted">
+                <span className="mr-1 inline-block rounded-full bg-ink px-2 py-0.5 text-[10px] text-white">Free</span>
+                {stay.total ? (
+                  <>
+                    <span className="text-base font-medium text-ink">{stay.total}</span> · {stay.nights}{" "}
+                    {stay.nights === 1 ? "night" : "nights"}
+                  </>
+                ) : (
+                  "Price from our team"
+                )}
+              </p>
+              <span className="text-[10px] text-muted">USD · estimated</span>
+            </>
+          ) : (
+          <>
           <p className="text-xs text-muted">
             Listed from{" "}
             <span className="text-base font-medium text-ink">
@@ -65,6 +85,8 @@ export default function VillaCard({
           <span className="text-[10px] text-muted">
             USD · dates confirmed by team
           </span>
+          </>
+          )}
         </div>
       </div>
     </article>
