@@ -8,6 +8,7 @@ import {
   fetchFreeNights,
   fetchQuote,
   money,
+  niceDate,
   rangeIsFree,
   type Quote,
 } from "@/lib/live";
@@ -20,6 +21,15 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
   const [guests, setGuests] = useState("2");
   const [error, setError] = useState("");
   const [step, setStep] = useState<"dates" | "details">("dates");
+  // Phone: the bottom bar steps aside while the booking box itself is on screen.
+  const [panelInView, setPanelInView] = useState(false);
+  useEffect(() => {
+    const el = document.getElementById("inquire");
+    if (!el || !("IntersectionObserver" in window)) return;
+    const io = new IntersectionObserver(([e]) => setPanelInView(e.isIntersecting), { threshold: 0.15 });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
   useEffect(() => {
     const p = new URLSearchParams(window.location.search);
     setArrive(p.get("arrive") || "");
@@ -211,7 +221,7 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
                   </p>
                 ) : null}
                 {live && !quoting && quote?.bookable && quote.total && quote.estimate ? (
-                  <p className="mt-1 text-[11px] text-muted">
+                  <p className="mt-1 text-xs text-muted">
                     Estimated total. Our team confirms the final price with you.
                   </p>
                 ) : null}
@@ -242,7 +252,7 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
                 <a href={quote.bookUrl} className="btn-primary mt-6 w-full">
                   Book now <Icon name="arrow" className="h-4 w-4" />
                 </a>
-                <p className="mt-3 text-center text-[11px] leading-5 text-muted">
+                <p className="mt-3 text-center text-xs leading-5 text-muted">
                   Secure payment on our booking page. You can review everything
                   before you pay.
                 </p>
@@ -256,7 +266,7 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
                   {quoting ? "Checking…" : "Request to book"}{" "}
                   <Icon name="arrow" className="h-4 w-4" />
                 </button>
-                <p className="mt-3 text-center text-[11px] leading-5 text-muted">
+                <p className="mt-3 text-center text-xs leading-5 text-muted">
                   {datesOk
                     ? "No payment now. Next: your name and contact details."
                     : "Choose your dates in the calendar to start."}
@@ -275,22 +285,37 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
           </div>
         </div>
       </aside>
-      <div className="safe-bottom fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/95 px-6 pt-3 backdrop-blur-md lg:hidden">
+      <div
+        className={`safe-bottom fixed inset-x-0 bottom-0 z-30 border-t border-line bg-paper/95 px-5 pt-3 backdrop-blur-md transition-transform duration-200 lg:hidden ${panelInView ? "translate-y-full" : ""}`}
+        aria-hidden={panelInView}
+      >
         <div className="flex items-center justify-between gap-3">
-          <div>
-            <span className="font-display text-2xl">
-              ${villa.pricePerNight.toLocaleString()}
-            </span>
-            <span className="ml-1 text-[10px] text-muted">/ night*</span>
-            <p className="text-[10px] text-muted">
-              *Listed rate · quote on request
-            </p>
-          </div>
+          {datesOk && !blocked ? (
+            <div className="min-w-0">
+              <p className="truncate text-sm font-medium">
+                {niceDate(arrive).replace(/ \d{4}$/, "")} – {niceDate(depart).replace(/ \d{4}$/, "")}
+              </p>
+              <p className="text-xs text-muted">
+                {nights} {nights === 1 ? "night" : "nights"}
+                {estimate ? ` · ${estimate} est.` : ""}
+              </p>
+            </div>
+          ) : (
+            <div>
+              <span className="font-display text-2xl">
+                ${villa.pricePerNight.toLocaleString()}
+              </span>
+              <span className="ml-1 text-xs text-muted">/ night</span>
+              <p className="text-xs text-muted">Listed rate</p>
+            </div>
+          )}
           <a
             href="#inquire"
-            className="btn-primary !min-h-11 !px-5 !py-3 text-xs"
+            tabIndex={panelInView ? -1 : 0}
+            className="btn-primary !min-h-12 shrink-0 !px-5 !py-3 text-sm"
           >
-            Plan this stay <Icon name="arrow" className="h-4 w-4" />
+            {step === "details" ? "Your details" : datesOk && !blocked ? "Request to book" : "Choose dates"}
+            <Icon name="arrow" className="h-4 w-4" />
           </a>
         </div>
       </div>

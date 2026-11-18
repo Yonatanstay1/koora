@@ -35,22 +35,34 @@ for (const [dev, vp, mobile] of [["phone", { width: 390, height: 844 }, true], [
   await p.goto(`${SITE}/villas/?arrive=${A}&depart=${D}&guests=2`, { waitUntil: "load" });
   await p.getByText(/stays? free/).first().waitFor({ timeout: 20000 });
   await p.waitForTimeout(800);
+  await p.evaluate(() => window.scrollTo(0, 700));
+  await p.waitForTimeout(500);
+  await shot("view-0-results");
   log.checks[dev + "-search"] = (await p.locator("main").innerText()).replace(/\s+/g, " ").slice(0, 700);
   await shot("full-1-search");
   // 2. Open Casa Jolu from the results: dates carried over, price shown
   await p.goto(`${SITE}/villas/casa-jolu/?arrive=${A}&depart=${D}&guests=2`, { waitUntil: "load" });
   await panel.getByText("Request to book").waitFor();
   await p.waitForTimeout(2000);
+  await shot("view-a-villa-top"); // what the guest sees first: bottom bar with dates
+  await p.evaluate(() => window.scrollTo(0, document.body.scrollHeight * 0.35));
+  await p.waitForTimeout(600);
+  await shot("view-b-villa-mid");
   await panel.scrollIntoViewIfNeeded();
   await panel.screenshot({ path: `${OUT}/${dev}-2-villa-dates.jpg`, type: "jpeg", quality: 60 });
   // 3. Details step: try empty submit first
   await panel.getByRole("button", { name: /Request to book/ }).click();
   await panel.getByText("Send booking request").waitFor();
+  await p.waitForTimeout(800);
+  await shot("view-c-details-top");
   await panel.getByRole("button", { name: /Send booking request/ }).click();
   log.checks[dev + "-emptyBlocked"] = await p.evaluate(() => [...document.querySelectorAll("#inquire :invalid")].length);
   await panel.getByLabel("Your name").fill("QA Test Guest");
   await panel.getByLabel("Email").fill("qa@example.com");
   await panel.getByLabel("Phone / WhatsApp").fill("+1 555 000 0000");
+  await panel.getByLabel("Phone / WhatsApp").focus();
+  await p.waitForTimeout(400);
+  await shot("view-d-typing");
   await panel.screenshot({ path: `${OUT}/${dev}-3-details.jpg`, type: "jpeg", quality: 60 });
   // 4. Send failure -> WhatsApp fallback keeps the details
   mode = "fail";
@@ -62,6 +74,8 @@ for (const [dev, vp, mobile] of [["phone", { width: 390, height: 844 }, true], [
   mode = "ok";
   await panel.getByRole("button", { name: /Send booking request/ }).click();
   await panel.getByText("Request sent.").waitFor({ timeout: 30000 });
+  await panel.getByText("Request sent.").scrollIntoViewIfNeeded();
+  await shot("view-e-sent");
   await panel.screenshot({ path: `${OUT}/${dev}-5-sent.jpg`, type: "jpeg", quality: 60 });
   // 6. Booked dates -> blocked, link to free homes
   if (bookedDay) {

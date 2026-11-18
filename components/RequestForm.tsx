@@ -152,7 +152,7 @@ export default function RequestForm({
       <button disabled={busy} className="btn-primary mt-6 w-full disabled:opacity-60">
         {busy ? "Sending your request…" : "Send booking request"} <Icon name="arrow" className="h-4 w-4" />
       </button>
-      <p className="mt-3 text-center text-[11px] leading-5 text-muted">
+      <p className="mt-3 text-center text-xs leading-5 text-muted">
         No payment now. Our team confirms with you before anything is booked.{" "}
         <Link href="/privacy" className="underline underline-offset-2">
           Privacy

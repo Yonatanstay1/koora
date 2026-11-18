@@ -61,7 +61,7 @@ export default function VillaCard({
           {stay ? (
             <>
               <p className="text-xs text-muted">
-                <span className="mr-1 inline-block rounded-full bg-ink px-2 py-0.5 text-[10px] text-white">Free</span>
+                <span className="mr-1 inline-block rounded-full bg-ink px-2 py-0.5 text-[11px] text-white">Free</span>
                 {stay.total ? (
                   <>
                     <span className="text-base font-medium text-ink">{stay.total}</span> · {stay.nights}{" "}

@@ -80,7 +80,7 @@ export default function SearchBar({
           {error}
         </p>
       )}
-      <p className="mt-4 text-[11px] leading-5 text-muted">
+      <p className="mt-4 text-xs leading-5 text-muted">
         Choose your dates to see which homes are free. Sending a booking
         request is free; our team confirms with you.
       </p>
