@@ -47,5 +47,53 @@
     "roomIds": [
       753116
     ]
+  },
+  "ocean-view-jungle-villa": {
+    "propertyId": 365758,
+    "roomIds": [
+      753114
+    ]
+  },
+  "casa-jolu": {
+    "propertyId": 365759,
+    "roomIds": [
+      753115
+    ]
+  },
+  "villa-jc-malpais": {
+    "propertyId": 365761,
+    "roomIds": [
+      753117
+    ]
+  },
+  "villa-1-santa-teresa": {
+    "propertyId": 365763,
+    "roomIds": [
+      753119
+    ]
+  },
+  "villa-2-santa-teresa": {
+    "propertyId": 365764,
+    "roomIds": [
+      753120
+    ]
+  },
+  "villa-3-santa-teresa": {
+    "propertyId": 365765,
+    "roomIds": [
+      753121
+    ]
+  },
+  "villa-4-santa-teresa": {
+    "propertyId": 365766,
+    "roomIds": [
+      753122
+    ]
+  },
+  "treehouse-3": {
+    "propertyId": 365776,
+    "roomIds": [
+      753137
+    ]
   }
 }
