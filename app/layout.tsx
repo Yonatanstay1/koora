@@ -20,7 +20,7 @@ const cormorant = Cormorant_Garamond({
 
 export const metadata: Metadata = {
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://koora-demo.web.app",
+    process.env.NEXT_PUBLIC_SITE_URL || "https://koorarentals.com",
   ),
   title: {
     default: "Koora — Stays, Estate Management & Development",
@@ -32,6 +32,7 @@ export const metadata: Metadata = {
     title: "Koora",
     description: "Villas in Santa Teresa & Malpaís, Costa Rica.",
     type: "website",
+    images: ["/images/stays/casa-ficus-1.webp"],
   },
 };
 

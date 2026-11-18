@@ -132,7 +132,7 @@ export default async function VillaPage({
                 Explore the area <Icon name="arrow" className="h-4 w-4" />
               </a>
               <p className="mt-3 text-[11px] text-muted">
-                Area map. Exact arrival directions are provided by the team.
+                Exact arrival directions are provided by the team.
               </p>
             </section>
           </div>

@@ -45,9 +45,11 @@ export default function Footer() {
             >
               WhatsApp ↗
             </a>
-            <Link className="block pt-5" href="/payment">
-              Make a Payment ↗
-            </Link>
+            {SITE.paymentUrl && (
+              <Link className="block pt-5" href="/payment">
+                Make a Payment ↗
+              </Link>
+            )}
           </div>
           <div className="space-y-4 text-xs">
             <p className="uppercase tracking-widest text-white/60">Social</p>

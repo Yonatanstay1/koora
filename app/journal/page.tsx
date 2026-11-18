@@ -18,7 +18,7 @@ export default function Page() {
         <span>Development</span>
         <span>Behind Koora</span>
       </div>
-      <JournalSection />
+      <JournalSection heading={false} />
       <section className="container-koora flex flex-wrap gap-8 pb-20">
         <a
           href={CONTACT.instagram}

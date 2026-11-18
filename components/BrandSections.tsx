@@ -243,10 +243,10 @@ export function Stories() {
     </section>
   ) : null;
 }
-export function JournalSection() {
+export function JournalSection({ heading = true }: { heading?: boolean } = {}) {
   return (
     <section className="container-koora py-20 lg:py-28">
-      <div className="flex flex-wrap items-end justify-between gap-6">
+      {heading && <div className="flex flex-wrap items-end justify-between gap-6">
         <div>
           <p className="eyebrow">Stories · Places · Homes · People</p>
           <h2 className="section-title mt-5">Koora Journal.</h2>
@@ -254,8 +254,8 @@ export function JournalSection() {
         <Link href="/journal" className="text-link">
           Explore the journal ↗
         </Link>
-      </div>
-      <div className="mt-12 grid gap-10 md:grid-cols-2">
+      </div>}
+      <div className={`${heading ? "mt-12 " : ""}grid gap-10 md:grid-cols-2`}>
         {JOURNAL.slice(0, 2).map((j) => (
           <Link key={j.slug} href={`/journal/${j.slug}`} className="group">
             <div className="relative aspect-[16/10] overflow-hidden">

@@ -79,6 +79,9 @@ export default function BookingPanel({ villa }: { villa: Villa }) {
             Rates vary by season. We’ll confirm availability, fees and the full
             price before you book.
           </p>
+          <p className="mt-3 text-xs font-medium text-ink">
+            Book direct with Koora: no booking-platform fees.
+          </p>
           <form
             className="mt-6"
             onSubmit={(e) => {

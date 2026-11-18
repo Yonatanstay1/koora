@@ -62,7 +62,7 @@ export default function SearchBar({
             onChange={(e) => setGuests(e.target.value)}
             className="field !border-0 !bg-paper"
           >
-            <option value="">Any group size</option>
+            <option value="">Any size</option>
             {Array.from({ length: 13 }, (_, i) => i + 1).map((n) => (
               <option key={n} value={n}>
                 {n} {n === 1 ? "guest" : "guests"}

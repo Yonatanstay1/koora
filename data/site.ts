@@ -12,7 +12,6 @@ export const NAV = [
   ["/destination", "Destination"],
   ["/journal", "Journal"],
   ["/about", "About"],
-  ["/sales", "Sales"],
   ["/contact", "Contact"],
 ];
 export const STATISTICS: { value: string; label: string }[] = [];

@@ -3,7 +3,7 @@ import type { MetadataRoute } from "next";
 import { JOURNAL } from "@/data/site";
 import { VILLAS } from "@/data/villas";
 export default function sitemap(): MetadataRoute.Sitemap {
-  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://koora-demo.web.app";
+  const base = process.env.NEXT_PUBLIC_SITE_URL || "https://koorarentals.com";
   return [
     "",
     "/villas",
@@ -11,8 +11,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/development",
     "/destination",
     "/journal",
-    "/sales",
-    "/payment",
     "/terms",
     "/es",
     ...JOURNAL.map((j) => "/journal/" + j.slug),
@@ -21,5 +19,5 @@ export default function sitemap(): MetadataRoute.Sitemap {
     "/contact",
     "/privacy",
     ...VILLAS.map((v) => "/villas/" + v.slug),
-  ].map((path) => ({ url: base + path }));
+  ].map((path) => ({ url: base + path + "/" }));
 }
