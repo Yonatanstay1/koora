@@ -21,7 +21,15 @@ export async function generateMetadata({
     ? {
         title: v.name,
         description: `${v.name} in ${v.cityLabel}, Costa Rica. ${v.beds} bedrooms for up to ${v.sleeps} guests. Explore the home and ask Koora about your stay.`,
-        openGraph: { title: v.name, images: v.images.slice(0, 1) },
+        alternates: { canonical: `/villas/${v.slug}/` },
+        openGraph: {
+          title: `${v.name} · ${v.cityLabel}`,
+          description: `${v.beds} bedrooms · up to ${v.sleeps} guests · Costa Rica. Choose your dates and send a booking request to Koora.`,
+          url: `/villas/${v.slug}/`,
+          siteName: "Koora Rentals",
+          type: "website",
+          images: [{ url: `/og/${v.slug}.jpg`, width: 1200, height: 630, alt: v.name }],
+        },
       }
     : { title: "Stay not found" };
 }

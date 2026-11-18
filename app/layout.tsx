@@ -29,11 +29,14 @@ export const metadata: Metadata = {
   description:
     "Homes, hospitality, estate management and development in Santa Teresa and Malpaís. Discover Koora’s local perspective.",
   openGraph: {
-    title: "Koora",
-    description: "Villas in Santa Teresa & Malpaís, Costa Rica.",
+    title: "Koora · Villas in Santa Teresa, Costa Rica",
+    description: "Hand-picked homes in Santa Teresa & Malpaís. Choose your dates, see what's free and send a booking request.",
     type: "website",
-    images: ["/images/stays/casa-ficus-1.webp"],
+    siteName: "Koora Rentals",
+    locale: "en_US",
+    images: [{ url: "/og/koora.jpg", width: 1200, height: 630, alt: "Koora, Santa Teresa" }],
   },
+  twitter: { card: "summary_large_image" },
 };
 
 export const viewport: Viewport = {

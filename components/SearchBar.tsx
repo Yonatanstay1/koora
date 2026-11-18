@@ -1,7 +1,8 @@
 "use client";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useState } from "react";
-import { stayError, todayISO } from "@/lib/stay";
+import { stayError } from "@/lib/stay";
+import DateRangePicker from "./DateRangePicker";
 import Icon from "./Icon";
 export default function SearchBar({
   className = "",
@@ -32,35 +33,22 @@ export default function SearchBar({
       }}
     >
       <div className="grid grid-cols-2 gap-4 lg:grid-cols-[1fr_1fr_1fr_auto]">
-        <label className="text-xs text-muted">
-          Check-in
-          <input
-            aria-label="Arrival"
-            type="date"
-            min={todayISO()}
-            value={arrive}
-            onChange={(e) => setArrive(e.target.value)}
-            className="field !border-0 !bg-paper"
-          />
-        </label>
-        <label className="text-xs text-muted">
-          Check-out
-          <input
-            aria-label="Departure"
-            type="date"
-            min={arrive || todayISO()}
-            value={depart}
-            onChange={(e) => setDepart(e.target.value)}
-            className="field !border-0 !bg-paper"
-          />
-        </label>
-        <label className="text-xs text-muted">
-          Guests
+        <DateRangePicker
+          arrive={arrive}
+          depart={depart}
+          onChange={(a, d) => {
+            setArrive(a);
+            setDepart(d);
+            setError("");
+          }}
+        />
+        <label className="relative block rounded-lg bg-paper px-3 py-2.5 transition-colors hover:bg-wash">
+          <span className="block text-xs text-muted">Guests</span>
           <select
             aria-label="Guests"
             value={guests}
             onChange={(e) => setGuests(e.target.value)}
-            className="field !border-0 !bg-paper"
+            className="mt-0.5 block w-full cursor-pointer appearance-none bg-transparent pr-6 text-base text-ink outline-none"
           >
             <option value="">Any size</option>
             {Array.from({ length: 13 }, (_, i) => i + 1).map((n) => (
@@ -69,8 +57,9 @@ export default function SearchBar({
               </option>
             ))}
           </select>
+          <Icon name="arrow" className="pointer-events-none absolute bottom-4 right-3 h-3.5 w-3.5 rotate-90 text-muted" />
         </label>
-        <button className="btn-primary self-end !rounded-lg">
+        <button className="btn-primary !min-h-[3.75rem] self-stretch !rounded-lg">
           <Icon name="search" className="h-4 w-4" />
           Find stays
         </button>
