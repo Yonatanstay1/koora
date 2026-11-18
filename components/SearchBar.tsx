@@ -81,8 +81,8 @@ export default function SearchBar({
         </p>
       )}
       <p className="mt-4 text-[11px] leading-5 text-muted">
-        Browse by group size. Our team confirms availability and your final
-        quote for the dates you choose.
+        Choose your dates to see which homes are free. Sending a booking
+        request is free; our team confirms with you.
       </p>
     </form>
   );
