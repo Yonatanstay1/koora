@@ -38,6 +38,19 @@ export default function Motion() {
       }
     };
     scan();
+    // Fast flicks, the End key and #anchor jumps can skip past an element between
+    // frames: anything at or above the fold that is still hidden gets shown.
+    let tick = 0;
+    const sweep = () => {
+      tick = 0;
+      document.querySelectorAll("[data-reveal]:not(.is-in)").forEach((el) => {
+        if (el.getBoundingClientRect().top < window.innerHeight * 0.95) el.classList.add("is-in");
+      });
+    };
+    const onScroll = () => {
+      if (!tick) tick = requestAnimationFrame(sweep);
+    };
+    window.addEventListener("scroll", onScroll, { passive: true });
     let raf = 0;
     const mo = new MutationObserver(() => {
       cancelAnimationFrame(raf);
@@ -48,6 +61,8 @@ export default function Motion() {
     return () => {
       io.disconnect();
       mo.disconnect();
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(tick);
       cancelAnimationFrame(raf);
     };
   }, [pathname]);
