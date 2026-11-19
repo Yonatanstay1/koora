@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { CONTACT } from "@/data/villas";
+import Icon from "./Icon";
 import {
   PILLARS,
   EXPERIENCES,
@@ -111,23 +112,46 @@ export function ServiceSection({
 }
 export function WhyKoora() {
   return (
-    <section className="container-koora py-20 lg:py-28">
-      <div className="grid gap-8 lg:grid-cols-2">
-        <p className="eyebrow">Why Koora?</p>
-        <h2 className="section-title">
-          Local by nature.
-          <br />
-          Personal by choice.
-        </h2>
-      </div>
-      <div className="mt-14 grid gap-x-10 gap-y-8 sm:grid-cols-2 lg:grid-cols-3">
-        {PILLARS.map(([title, body], i) => (
-          <div className="border-t border-line pt-6" key={title}>
-            <span className="text-xs text-muted">0{i + 1}</span>
-            <h3 className="mt-6 text-xl">{title}</h3>
-            <p className="mt-4 max-w-sm text-sm leading-7 text-muted">{body}</p>
+    <section className="container-koora py-20 lg:py-32">
+      <div className="grid gap-12 lg:grid-cols-[5fr_7fr] lg:gap-20">
+        <div className="lg:sticky lg:top-28 lg:self-start">
+          <p className="eyebrow">Why Koora?</p>
+          <h2 className="section-title mt-6">
+            Local by nature.
+            <br />
+            Personal by choice.
+          </h2>
+          <div data-reveal="img" className="relative mt-10 aspect-[4/3] overflow-hidden lg:aspect-[4/5]">
+            <Image
+              src="/images/stays/ocean-view-jungle-villa-2.webp"
+              alt="A Koora home among the trees near the ocean"
+              fill
+              sizes="(max-width: 1024px) 100vw, 40vw"
+              className="object-cover"
+            />
+            <span className="absolute bottom-5 left-5 bg-black/70 px-3 py-2 text-[10px] uppercase tracking-widest text-white">
+              Santa Teresa · Costa Rica
+            </span>
           </div>
-        ))}
+        </div>
+        <ol className="lg:pt-28">
+          {PILLARS.map(([title, body], i) => (
+            <li
+              key={title}
+              data-reveal
+              style={{ "--d": `${i * 90}ms` } as React.CSSProperties}
+              className="group grid grid-cols-[3.5rem_1fr] gap-5 border-t border-line py-9 last:border-b sm:grid-cols-[6rem_1fr] sm:gap-8"
+            >
+              <span className="font-display text-5xl leading-none tracking-tight text-ink/15 transition-colors duration-500 group-hover:text-ink sm:text-7xl">
+                0{i + 1}
+              </span>
+              <div>
+                <h3 className="text-2xl tracking-tight sm:text-3xl">{title}</h3>
+                <p className="mt-3 max-w-md text-sm leading-7 text-muted">{body}</p>
+              </div>
+            </li>
+          ))}
+        </ol>
       </div>
     </section>
   );
@@ -188,29 +212,59 @@ export function DestinationSection() {
 }
 export function Experiences() {
   return (
-    <section className="bg-wash">
-      <div className="container-koora py-20">
-        <p className="eyebrow">The Koora guide</p>
-        <h2 className="section-title mt-5">More than a place to stay.</h2>
-        <div className="mt-12 grid gap-x-8 sm:grid-cols-2 lg:grid-cols-3">
-          {EXPERIENCES.map(([title, sub], i) => (
-            <Link
-              key={title}
-              href={`/destination#${title.toLowerCase().replaceAll(" ", "-")}`}
-              className="group border-t border-line py-7"
-            >
-              <p className="text-xs text-muted">0{i + 1}</p>
-              <h3 className="mt-5 flex justify-between text-2xl">
-                {title}
-                <span className="transition-transform group-hover:translate-x-1">
-                  ↗
-                </span>
-              </h3>
-              <p className="mt-3 text-sm text-muted">{sub}</p>
-            </Link>
+    <section className="relative isolate overflow-hidden bg-ink text-white">
+      <Image
+        src="/images/editorial/coast.webp"
+        alt=""
+        fill
+        sizes="100vw"
+        className="-z-20 object-cover"
+      />
+      <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/80 via-black/55 to-black/85" />
+      <div aria-hidden="true" className="marquee overflow-hidden border-b border-white/15 py-7">
+        <div className="marquee-track flex w-max gap-14 whitespace-nowrap font-display text-[clamp(3rem,8vw,7rem)] leading-none tracking-tight">
+          {[...EXPERIENCES, ...EXPERIENCES].map(([title], i) => (
+            <span key={i} className={i % 2 ? "text-outline" : "text-white"}>
+              {title}
+            </span>
           ))}
         </div>
-        <Link href="/destination#guide" className="text-link mt-8">
+      </div>
+      <div className="container-koora py-20 lg:py-28">
+        <div className="flex flex-wrap items-end justify-between gap-8">
+          <div>
+            <p className="eyebrow !text-white/65">The Koora guide</p>
+            <h2 className="section-title mt-5">More than a place to stay.</h2>
+          </div>
+          <p className="max-w-sm text-sm leading-7 text-white/75">
+            Six ways to spend your days on this coast. Ask our team and we&rsquo;ll point you to the right places.
+          </p>
+        </div>
+        <div className="mt-14 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {EXPERIENCES.map(([title, sub, detail], i) => (
+            <div key={title} data-reveal style={{ "--d": `${(i % 3) * 110}ms` } as React.CSSProperties}>
+              <Link
+                href={`/destination#${title.toLowerCase().replaceAll(" ", "-")}`}
+                className="group flex h-full min-h-[15rem] flex-col justify-between rounded-2xl border border-white/15 bg-white/[0.07] p-7 backdrop-blur-md transition duration-500 hover:-translate-y-1 hover:bg-white hover:text-ink"
+              >
+                <div className="flex items-start justify-between">
+                  <span className="text-xs text-white/60 transition-colors group-hover:text-muted">0{i + 1}</span>
+                  <span className="flex h-11 w-11 items-center justify-center rounded-full border border-white/30 transition duration-500 group-hover:rotate-45 group-hover:border-ink/20">
+                    <Icon name="arrow" className="h-4 w-4 -rotate-45" />
+                  </span>
+                </div>
+                <div className="mt-10">
+                  <h3 className="text-3xl tracking-tight">{title}</h3>
+                  <p className="mt-2 text-sm text-white/80 transition-colors group-hover:text-ink">{sub}</p>
+                  {detail && (
+                    <p className="mt-3 line-clamp-2 text-xs leading-6 text-white/55 transition-colors group-hover:text-muted">{detail}</p>
+                  )}
+                </div>
+              </Link>
+            </div>
+          ))}
+        </div>
+        <Link href="/destination#guide" className="text-link mt-10 !border-white/40">
           Explore the Koora guide ↗
         </Link>
       </div>

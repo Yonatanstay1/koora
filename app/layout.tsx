@@ -4,6 +4,7 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import WhatsAppButton from "@/components/WhatsAppButton";
+import Motion from "@/components/Motion";
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -65,6 +66,7 @@ export default function RootLayout({
         </main>
         <Footer />
         <WhatsAppButton />
+        <Motion />
       </body>
     </html>
   );

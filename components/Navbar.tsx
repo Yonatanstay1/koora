@@ -63,7 +63,7 @@ export default function Navbar() {
   return (
     <>
       <header
-        className={`fixed inset-x-0 top-0 z-50 ${solid ? "border-b border-white/15 bg-black text-white" : "text-white"}`}
+        className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color,backdrop-filter] duration-500 ${solid ? "border-white/10 bg-black/85 text-white backdrop-blur-xl" : "border-transparent text-white"}`}
       >
         <div className="container-koora flex h-20 items-center justify-between lg:h-24">
           <Link

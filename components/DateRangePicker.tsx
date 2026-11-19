@@ -30,10 +30,12 @@ export default function DateRangePicker({
   arrive,
   depart,
   onChange,
+  bordered = false,
 }: {
   arrive: string;
   depart: string;
   onChange: (arrive: string, depart: string) => void;
+  bordered?: boolean;
 }) {
   const today = todayISO();
   const [field, setField] = useState<Field | null>(null);
@@ -203,7 +205,7 @@ export default function DateRangePicker({
         onClick={() => (active ? setField(null) : openAt(f))}
         aria-haspopup="dialog"
         aria-expanded={active}
-        className={`block w-full rounded-lg px-3 py-2.5 text-left transition-colors ${active ? "bg-white ring-2 ring-ink" : "bg-paper hover:bg-wash"}`}
+        className={`block w-full rounded-lg px-3 py-2.5 text-left transition-colors ${bordered ? "min-h-[3.25rem] border border-line " : ""}${active ? "bg-white ring-2 ring-ink" : "bg-paper hover:bg-wash"}`}
       >
         <span className="block text-xs text-muted">{title}</span>
         <span className={`mt-0.5 block truncate text-base ${value ? "text-ink" : "text-muted"}`}>{value ? short(value) : "Add date"}</span>

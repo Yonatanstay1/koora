@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { CONTACT, VILLAS } from "@/data/villas";
-import { stayError, todayISO } from "@/lib/stay";
+import { stayError } from "@/lib/stay";
 import Icon from "./Icon";
+import DateRangePicker from "./DateRangePicker";
 export default function ContactForm() {
   const whatsappOnly = process.env.NEXT_PUBLIC_INQUIRY_MODE === "whatsapp";
   const [form, setForm] = useState({
@@ -205,28 +206,17 @@ export default function ContactForm() {
         </label>
         {form.interest === "Booking a Villa" && (
           <>
-            <label className="text-xs">
-              Arrival · optional
-              <input
-                name="arrive"
-                type="date"
-                min={todayISO()}
-                value={form.arrive}
-                onChange={set("arrive")}
-                className="field"
+            <div className="grid grid-cols-2 gap-5 sm:col-span-2">
+              <DateRangePicker
+                bordered
+                arrive={form.arrive}
+                depart={form.depart}
+                onChange={(a, d) => {
+                  key.current = "";
+                  setForm((f) => ({ ...f, arrive: a, depart: d }));
+                }}
               />
-            </label>
-            <label className="text-xs">
-              Departure · optional
-              <input
-                name="depart"
-                type="date"
-                min={form.arrive || todayISO()}
-                value={form.depart}
-                onChange={set("depart")}
-                className="field"
-              />
-            </label>
+            </div>
             <label className="text-xs">
               Number of guests
               <input

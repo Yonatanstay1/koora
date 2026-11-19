@@ -13,19 +13,19 @@ export default function Hero() {
         fill
         priority
         sizes="100vw"
-        className="-z-20 object-cover"
+        className="hero-zoom -z-20 object-cover"
       />
       {SITE.heroVideo && <HeroVideo src={SITE.heroVideo} />}
       <div className="absolute inset-0 -z-10 bg-gradient-to-b from-black/55 via-black/25 to-black/80" />
       <div className="container-koora pb-10 lg:pb-14">
-        <p className="eyebrow !text-white/90">
+        <p className="hero-fade eyebrow !text-white/90" style={{ animationDelay: "150ms" }}>
           Santa Teresa · Malpaís · Costa Rica
         </p>
         <h1 className="mt-7 max-w-5xl text-[clamp(3.5rem,8.5vw,8rem)] font-normal leading-[0.98] tracking-[-0.065em]">
-          A sense of home.
-          <br />A way of life.
+          <span className="hero-line"><span style={{ animationDelay: "250ms" }}>A sense of home.</span></span>
+          <span className="hero-line"><span style={{ animationDelay: "420ms" }}>A way of life.</span></span>
         </h1>
-        <div className="mt-9 flex flex-col justify-between gap-7 lg:flex-row lg:items-end">
+        <div className="hero-fade mt-9 flex flex-col justify-between gap-7 lg:flex-row lg:items-end" style={{ animationDelay: "700ms" }}>
           <p className="max-w-sm text-sm leading-7 text-white/90">
             Homes, hospitality and a deeper connection to Santa Teresa. Rooted
             here. Ready for you.
@@ -40,7 +40,9 @@ export default function Hero() {
           </nav>
         </div>
         <Suspense fallback={<div className="mt-10 h-36 bg-white" />}>
-          <SearchBar className="mt-10 !rounded-none text-ink" variant="hero" />
+          <div className="hero-fade" style={{ animationDelay: "850ms" }}>
+            <SearchBar className="mt-10 !rounded-none text-ink" variant="hero" />
+          </div>
         </Suspense>
       </div>
     </section>
